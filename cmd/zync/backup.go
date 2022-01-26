@@ -36,4 +36,3 @@ func (c *client) backup() error {
 
 	return nil
 }
-

@@ -60,4 +60,3 @@ func (c *client) ls(cwd, pattern string) error {
 
 	return nil
 }
-

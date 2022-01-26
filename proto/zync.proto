@@ -1,63 +1,63 @@
 syntax = "proto3";
 
 package zync.v1;
-option go_package = "proto/zync/v1;zync";
+option  go_package = "proto/zync/v1;zync";
 
 service zync {
-	// AddFiles adds a single file to IPFS if the provided
-	// path is to an individual file, or it will recursively
-	// add all files within a directory if the provided path
-	// is a directory
+  // AddFiles adds a single file to IPFS if the provided
+  // path is to an individual file, or it will recursively
+  // add all files within a directory if the provided path
+  // is a directory
   rpc AddFiles(RegexRequest) returns (stream File);
-	// ListFiles lists all files matching the pattern from 
-	// zync
+  // ListFiles lists all files matching the pattern from
+  // zync
   rpc ListFiles(RegexRequest) returns (stream File);
-	// DeleteFiles removes all files matching the pattern 
-	// from zync
+  // DeleteFiles removes all files matching the pattern
+  // from zync
   rpc DeleteFiles(RegexRequest) returns (stream File);
-	// Backup communicates to the server that any cached
-	// data should be backed up to IPFS, returning the
-	// resulting CID
+  // Backup communicates to the server that any cached
+  // data should be backed up to IPFS, returning the
+  // resulting CID
   rpc Backup(BackupRequest) returns (BackupStatus);
-	// Restore initiates the process of restoring files 
-	// from IPFS to the host machine
+  // Restore initiates the process of restoring files
+  // from IPFS to the host machine
   rpc Restore(RestoreRequest) returns (stream RestoreStatusUpdate);
 }
 
 // RestoreRequest provides the controller CID that contains
 // metadata about which files to restore on the host
 message RestoreRequest {
-	string cid = 1;
+  string cid = 1;
 }
 
-// RestoreStatusUpdate contains the current status of the 
+// RestoreStatusUpdate contains the current status of the
 // restore process
 message RestoreStatusUpdate {
-	double percent_completed = 1;
+  double percent_completed = 1;
 }
 
 // BackupRequest is an empty message used to initiate the
 // backup process
 message BackupRequest {}
 
-// BackupStatus contains the CID with the most up to date 
+// BackupStatus contains the CID with the most up to date
 // metadata about what is being stored in IPFS
 message BackupStatus {
-	string cid = 1;
+  string cid = 1;
 }
 
 // RegexRequest is a request that provides an re2 compatible
 // regex that is used for searching for matching files
 // (https://github.com/google/re2/wiki/Syntax)
 message RegexRequest {
-	string pattern = 1;
-	string current_directory = 2;
+  string pattern           = 1;
+  string current_directory = 2;
 }
 
 // File represents an individual file managed by zync
 message File {
-  string cid = 1;
+  string cid           = 1;
   string absolute_path = 2;
-	string checksum = 3;
-	bool is_directory = 4;
+  string checksum      = 3;
+  bool   is_directory  = 4;
 }

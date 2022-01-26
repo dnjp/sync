@@ -50,4 +50,3 @@ func (c *client) restore(cid string) error {
 
 	return nil
 }
-

@@ -70,4 +70,3 @@ func validRegexArg(cmd *cobra.Command, args []string) error {
 	_, err := regexp.Compile(args[0])
 	return err
 }
-

@@ -93,4 +93,3 @@ func (s *Server) Backup(ctx context.Context, req *zync.BackupRequest) (*zync.Bac
 func (s *Server) Restore(req *zync.RestoreRequest, rs zync.Zync_RestoreServer) error {
 	return fmt.Errorf("TODO")
 }
-

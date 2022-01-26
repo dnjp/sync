@@ -59,4 +59,3 @@ func (c *client) add(cwd, pattern string) error {
 
 	return nil
 }
-
