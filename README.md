@@ -1,3 +1,5 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/dnjp/zync.svg)](https://pkg.go.dev/github.com/dnjp/zync)
+
 # Zync
 
 Zync is a utility for backing up your files and folders to [IPFS](https://ipfs.io/). In it's current state, Zync is sort of like a primitive version of [Dropbox](https://www.dropbox.com/home) that can be used on the command line. Files and directories managed with `zync` will be continuously backed up to IPFS when they are changed. The list of all of your actively managed files is also backed up to IPFS, providing you a single [CID](https://docs.ipfs.io/concepts/content-addressing/) that can be used to restore all managed files to their original location.
