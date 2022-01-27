@@ -5,10 +5,13 @@ import (
 	"log"
 	"os"
 	"syscall"
+	"time"
 
 	zyncd "github.com/dnjp/zync/daemon"
+	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func newDaemon() *daemon.Context {
@@ -39,7 +42,7 @@ func stopDaemon(ctx *daemon.Context) error {
 	return ctx.Release()
 }
 
-func rootCmd() *cobra.Command {
+func rootCmd(configFile *string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                   "zyncd COMMAND",
 		DisableFlagsInUseLine: false,
@@ -52,11 +55,16 @@ func rootCmd() *cobra.Command {
 		},
 	}
 	initCommands(cmd)
+	initFlags(cmd, configFile)
 	return cmd
 }
 
 func initCommands(cmd *cobra.Command) {
 	cmd.AddCommand(startCmd())
+}
+
+func initFlags(cmd *cobra.Command, configFile *string) {
+	cmd.PersistentFlags().StringVar(configFile, "config", "./config.yaml", "config file (default is ./config.yaml)")
 }
 
 func startCmd() *cobra.Command {
@@ -65,7 +73,12 @@ func startCmd() *cobra.Command {
 		Short: "Launches the daemon",
 		Run: func(cmd *cobra.Command, args []string) {
 
-			server, err := zyncd.NewServer(8081)
+			server, err := zyncd.NewServer(
+				8081,
+				shell.NewShell(viper.GetString("ipfs_host")),
+				viper.GetString("cid_cache"),
+				time.Duration(viper.GetInt("refresh_seconds"))*time.Second,
+			)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "%+v\n", err)
 				os.Exit(1)

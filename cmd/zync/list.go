@@ -30,6 +30,7 @@ func (c *client) listFilesCmd() *cobra.Command {
 			if len(args) > 0 {
 				pattern = args[0]
 			}
+
 			if err := c.ls(cwd, pattern); err != nil {
 				fmt.Fprintf(os.Stderr, "error listing files: %+v\n", err)
 				os.Exit(1)

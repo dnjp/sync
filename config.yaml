@@ -1,0 +1,3 @@
+ipfs_host: localhost:5001
+cid_cache: /tmp/cid
+refresh_seconds: 5
