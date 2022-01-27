@@ -1,3 +1,4 @@
 ipfs_host: localhost:5001
+use_ipfs_env: false
 cid_cache: /tmp/cid
 refresh_seconds: 5

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	zyncd "github.com/dnjp/zync/daemon"
+	"github.com/dnjp/zync/watcher"
 	shell "github.com/ipfs/go-ipfs-api"
 	"github.com/sevlyar/go-daemon"
 	"github.com/spf13/cobra"
@@ -73,9 +74,25 @@ func startCmd() *cobra.Command {
 		Short: "Launches the daemon",
 		Run: func(cmd *cobra.Command, args []string) {
 
+			projectID := viper.GetString("PROJECT_ID")
+			projectSecret := viper.GetString("PROJECT_SECRET")
+			ipfsHost := viper.GetString("ipfs_host")
+			useEnv := viper.GetBool("use_ipfs_env")
+
+			var sh *shell.Shell
+			if projectID != "" && projectID != "" && useEnv {
+				// configure ipfs client for Infura: https://infura.io
+				sh = shell.NewShellWithClient(
+					ipfsHost,
+					watcher.NewIPFSClient(projectID, projectSecret),
+				)
+			} else {
+				sh = shell.NewShell(ipfsHost)
+			}
+
 			server, err := zyncd.NewServer(
 				8081,
-				shell.NewShell(viper.GetString("ipfs_host")),
+				sh,
 				viper.GetString("cid_cache"),
 				time.Duration(viper.GetInt("refresh_seconds"))*time.Second,
 			)

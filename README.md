@@ -60,11 +60,26 @@ $ zync ls
 file: cid:"QmPQWuv5cwbKWCHkYxEseFawk76gacbP4p2DXkWniY5azS"  absolute_path:"/tmp/hello"
 ```
 
-You can also remove files that have been added:
+Now, let's change the contents of our hello file to see the [CID](https://docs.ipfs.io/concepts/content-addressing/) change in real time:
+
+```
+$ echo 'hello there' > /tmp/hello
+$ ./bin/zync ls hello
+file: cid:"QmSwZjAMN4jkE5rZ1Ewm3hLUVAgVuVeGh1EK3kR2mw1wDo"  absolute_path:"/tmp/hello"
+```
+
+Notice that the CID has changed? Files managed with Zync are always kept up to date. Let's try removing that file:
+
+```
+$ rm /tmp/hello
+$ ./bin/zync ls hello
+```
+
+The file has been automatically removed from Zync. You can also remove files from Zync without removing them from your machine:
 
 ```
 $ zync rm hello
-file: cid:"QmPQWuv5cwbKWCHkYxEseFawk76gacbP4p2DXkWniY5azS"  absolute_path:"/tmp/hello"
+file: cid:"QmSwZjAMN4jkE5rZ1Ewm3hLUVAgVuVeGh1EK3kR2mw1wDo"  absolute_path:"/tmp/hello"
 ```
 
 Did you catch that? The full path to the file did not need to be supplied to `zync rm` because `add`, `ls`, and `rm` all support accessing files using a [regex](https://github.com/google/re2/wiki/Syntax).
