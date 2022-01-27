@@ -1,12 +1,12 @@
 # Zync
 
-Zync is a utility for backing up your files and folders to [IPFS](https://ipfs.io/). In it's current state, Zync is sort of like a primitive version of [Dropbox](https://www.dropbox.com/home) that can be used on the command line. Files and directories managed with `zync` will be continuously backed up to IPFS when they are changed. The list of all of your actively managed files is also backed up to IPFS, providing you a single [CID](https://docs.ipfs.io/concepts/content-addressing/) that can be used to restore all managed files to their original location. 
+Zync is a utility for backing up your files and folders to [IPFS](https://ipfs.io/). In it's current state, Zync is sort of like a primitive version of [Dropbox](https://www.dropbox.com/home) that can be used on the command line. Files and directories managed with `zync` will be continuously backed up to IPFS when they are changed. The list of all of your actively managed files is also backed up to IPFS, providing you a single [CID](https://docs.ipfs.io/concepts/content-addressing/) that can be used to restore all managed files to their original location.
 
 ## How does this work?
 
 There are two components that make up Zync - the daemon (`zyncd`) and the command line client (`zync`). Once installed, `zyncd` will be launched by the daemon manager for your operating system - [launchd](https://en.wikipedia.org/wiki/Launchd) on MacOS and [systemd](https://en.wikipedia.org/wiki/Systemd) on Linux. `zync`, the command line client, is the tool you use to add and remove files as well as list those that are already managed.
 
-## Building
+## Installation
 
 Zync depends on having recent versions of [Go](https://go.dev/learn/) and
 [Protobuf](https://grpc.io/docs/protoc-installation/) installed. The linked
@@ -27,3 +27,42 @@ $ which zyncd
 /usr/local/bin/zyncd
 ```
 
+## Usage
+
+After the executables are installed, run `make start` to launch the `zyncd` daemon, allowing `zync` (the command line client) to be able to connect to it:
+
+```
+$ make start
+./bin/zyncd start
+$ cat zyncd.log
+2022/01/26 21:40:46 - - - - - - - - - - - - - - -
+2022/01/26 21:40:46         zyncd started
+2022/01/26 21:40:46 - - - - - - - - - - - - - - -
+...
+```
+
+Now that `zyncd` has started, you can use `zync` to add files:
+
+```
+$ echo 'hello world' >> /tmp/hello
+$ cat /tmp/hello
+hello world
+$ zync add /tmp/hello
+file: cid:"QmPQWuv5cwbKWCHkYxEseFawk76gacbP4p2DXkWniY5azS"  absolute_path:"/tmp/hello"
+```
+
+Once files are added, you can use `zync ls` to list the files that are currently managed:
+
+```
+$ zync ls
+file: cid:"QmPQWuv5cwbKWCHkYxEseFawk76gacbP4p2DXkWniY5azS"  absolute_path:"/tmp/hello"
+```
+
+You can also remove files that have been added:
+
+```
+$ zync rm hello
+file: cid:"QmPQWuv5cwbKWCHkYxEseFawk76gacbP4p2DXkWniY5azS"  absolute_path:"/tmp/hello"
+```
+
+Did you catch that? The full path to the file did not need to be supplied to `zync rm` because `add`, `ls`, and `rm` all support accessing files using a [regex](https://github.com/google/re2/wiki/Syntax).
